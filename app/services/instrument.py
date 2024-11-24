@@ -13,8 +13,7 @@ class InstrumentService(BaseService):
     async def get_last_trading_days(self, num_dates: int):
         """Get last trading days."""
         self._validate_num_dates(num_dates)
-        return await self.uow.instruments.get_last_trading_dates(num_dates)
-
+        return await self.uow.instruments.get_last_trading_days(num_dates)
 
 
     @atomic
@@ -24,9 +23,9 @@ class InstrumentService(BaseService):
 
 
     @atomic
-    async def get_trading_results(self):
+    async def get_trading_results(self, **kwargs):
         """Get trading results."""
-        return await self.uow.instruments.get_trading_results()
+        return await self.uow.instruments.get_trading_results(**kwargs)
 
 
     @classmethod
