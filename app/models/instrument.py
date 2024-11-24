@@ -9,7 +9,7 @@ from sqlalchemy.orm import (
 from app.models.base import Base
 
 
-class InstrumentDB(Base):  # type: ignore
+class InstrumentDB(Base):
     """Class which represents Instrument model in SQLAlchemy database."""
 
     exchange_product_id: Mapped[str] = mapped_column(String(30))

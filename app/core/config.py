@@ -10,7 +10,7 @@ class Settings(BaseSettings):
         f"{os.getenv('POSTGRES_PASSWORD')}@"
         f"{os.getenv('DB_HOST')}"
         f":{os.getenv('DB_PORT')}/"
-        f"{os.getenv('POSTGRES_DB')}"
+        f"{os.getenv('DB_NAME')}"
     )
     secret: str = "VERY_SECRET_SECRET"
     model_config: SettingsConfigDict = SettingsConfigDict(
