@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from functools import wraps
-from typing import Any, Awaitable, Callable, Never, Optional
+from typing import Any, Awaitable, Callable, Optional
 from types import TracebackType
 
 from app.database.db import AsyncSessionLocal
+from app.models.instrument import InstrumentDB
 from app.repositories.instrument import InstrumentRepository
 
 
@@ -22,11 +23,11 @@ def atomic(
 
 class AbstractUnitOfWork(ABC):
     @abstractmethod
-    def __init__(self) -> Never:
+    def __init__(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    async def __aenter__(self) -> Never:
+    async def __aenter__(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -35,15 +36,15 @@ class AbstractUnitOfWork(ABC):
         exc_type: Optional[type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
-    ) -> Never:
+    ) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    async def commit(self) -> Never:
+    async def commit(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    async def rollback(self) -> Never:
+    async def rollback(self) -> None:
         raise NotImplementedError
 
 
@@ -55,7 +56,7 @@ class UnitOfWork(AbstractUnitOfWork):
 
     async def __aenter__(self) -> None:
         self.session = self.session_factory()
-        self.instruments = InstrumentRepository(self.session)
+        self.instruments = InstrumentRepository(self.session, InstrumentDB)
 
     async def __aexit__(
         self,

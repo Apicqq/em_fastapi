@@ -30,6 +30,7 @@ async def get_last_trading_days(
 
 @router.get(
     "/get_dynamics",
+    response_model=Page[InstrumentOut],
 )
 @cache(expire=None)
 async def get_dynamics(

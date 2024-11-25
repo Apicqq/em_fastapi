@@ -3,7 +3,7 @@ from typing import Any, Sequence
 
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page
-from sqlalchemy import select, distinct, Result, between
+from sqlalchemy import select, distinct, Result, between, Select
 
 from app.models.instrument import InstrumentDB
 from app.repositories.base import SqlAlchemyRepository
@@ -13,7 +13,7 @@ class InstrumentRepository(SqlAlchemyRepository):
 
     async def get_last_trading_days(self, num_days: int) -> Sequence[date]:
         """Список дат последних торговых дней"""
-        query  = (
+        query: Select = (
             select(distinct(self.model.date))
             .order_by(
                 self.model.date.desc(),
@@ -30,7 +30,7 @@ class InstrumentRepository(SqlAlchemyRepository):
         **kwargs: Any,
     ) -> Page[InstrumentDB]:
         """Список торгов за заданный период"""
-        query = (
+        query: Select = (
             select(self.model)
             .filter(
                 between(self.model.date, start_date, end_date),

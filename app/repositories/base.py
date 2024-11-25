@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Never, Sequence, TypeVar, TYPE_CHECKING
+from typing import Any, Sequence, TypeVar, TYPE_CHECKING, Union, Optional
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.base import Base
 
 if TYPE_CHECKING:
+    from sqlalchemy import Insert, Select, Update, Delete
     from sqlalchemy.engine import Result
+
+Model = TypeVar("Model", bound=Base)
 
 
 class AbstractRepository(ABC):
@@ -18,41 +21,54 @@ class AbstractRepository(ABC):
     """
 
     @abstractmethod
-    async def add_one(self, *args: Any, **kwargs: Any) -> Never:
+    async def add_one(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    async def add_one_and_get_id(self, *args: Any, **kwargs: Any) -> Never:
+    async def add_one_and_get_id(
+            self,
+            *args: Any,
+            **kwargs: Any
+    ) -> Union[int, str]:
         raise NotImplementedError
 
-    async def add_one_and_get_obj(self, *args: Any, **kwargs: Any) -> Never:
+    async def add_one_and_get_obj(
+            self,
+            *args: Any,
+            **kwargs: Any
+    ) -> type[Model]:
         raise NotImplementedError
 
     async def get_by_query_one_or_none(
-        self,
-        *args: Any,
-        **kwargs: Any,
-    ) -> Never:
+            self,
+            *args: Any,
+            **kwargs: Any,
+    ) -> Optional[type[Model]]:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_by_query_all(self, *args: Any, **kwargs: Any) -> Never:
+    async def get_by_query_all(
+            self,
+            *args: Any,
+            **kwargs: Any
+    ) -> Optional[Sequence[Model]]:
         raise NotImplementedError
 
     @abstractmethod
-    async def update_one_by_id(self, *args: Any, **kwargs: Any) -> Never:
+    async def update_one_by_id(
+            self,
+            *args: Any,
+            **kwargs: Any
+    ) -> Optional[type[Model]]:
         raise NotImplementedError
 
     @abstractmethod
-    async def delete_by_query(self, *args: Any, **kwargs: Any) -> Never:
+    async def delete_by_query(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    async def delete_all(self, *args: Any, **kwargs: Any) -> Never:
+    async def delete_all(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError
-
-
-Model = TypeVar("Model", bound=Base)
 
 
 class SqlAlchemyRepository(AbstractRepository):
@@ -65,41 +81,50 @@ class SqlAlchemyRepository(AbstractRepository):
         - model: SQLAlchemy child DeclarativeBase class
     """
 
-    model: Model
-
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(
+            self,
+            session: AsyncSession,
+            model: type[Model]
+    ) -> None:
         self.session = session
+        self.model = model
 
     async def add_one(self, *args, **kwargs: Any) -> None:
-        query = insert(self.model).values(**kwargs)
+        query: Insert = insert(self.model).values(**kwargs)
         await self.session.execute(query)
 
     async def add_one_and_get_id(self, *args, **kwargs: Any) -> int | str:
-        query = insert(self.model).values(**kwargs).returning(self.model.id)
+        query: Insert = insert(self.model).values(**kwargs).returning(
+            self.model.id)
         obj_id: Result = await self.session.execute(query)
         return obj_id.scalar_one()
 
     async def add_one_and_get_obj(self, **kwargs: Any) -> Model:
-        query = insert(self.model).values(**kwargs).returning(self.model)
+        query: Insert = insert(self.model).values(**kwargs).returning(
+            self.model)
         obj: Result = await self.session.execute(query)
         return obj.scalar_one()
 
     async def get_by_query_one_or_none(self, **kwargs: Any) -> Model | None:
-        query = select(self.model).filter_by(**kwargs)
+        query: Select = select(self.model).filter_by(**kwargs)
         res: Result = await self.session.execute(query)
         return res.unique().scalar_one_or_none()
 
-    async def get_by_query_all(self, **kwargs: Any) -> Sequence[Model]:
-        query = select(self.model).filter_by(**kwargs)
+    async def get_by_query_all(
+            self,
+            *args,
+            **kwargs: Any
+    ) -> Optional[Sequence[Model]]:
+        query: Select = select(self.model).filter_by(**kwargs)
         res: Result = await self.session.execute(query)
         return res.scalars().all()
 
     async def update_one_by_id(
-        self,
-        obj_id: int | str,
-        **kwargs: Any,
-    ) -> Model | None:
-        query = (
+            self,
+            obj_id: int | str,
+            **kwargs: Any,
+    ) -> Optional[Model]:
+        query: Update = (
             update(self.model)
             .filter(
                 self.model.id == obj_id,
@@ -107,13 +132,13 @@ class SqlAlchemyRepository(AbstractRepository):
             .values(**kwargs)
             .returning(self.model)
         )
-        obj: Result | None = await self.session.execute(query)
+        obj: Result = await self.session.execute(query)
         return obj.scalar_one_or_none()
 
     async def delete_by_query(self, **kwargs: Any) -> None:
-        query = delete(self.model).filter_by(**kwargs)
+        query: Delete = delete(self.model).filter_by(**kwargs)
         await self.session.execute(query)
 
     async def delete_all(self) -> None:
-        query = delete(self.model)
+        query: Delete = delete(self.model)
         await self.session.execute(query)
