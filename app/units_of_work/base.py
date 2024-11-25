@@ -8,7 +8,7 @@ from app.repositories.instrument import InstrumentRepository
 
 
 def atomic(
-        func: Callable[..., Awaitable[Any]]
+    func: Callable[..., Awaitable[Any]],
 ) -> Callable[..., Awaitable[Any]]:
     """Decorate function with transaction mode."""
 
@@ -21,7 +21,6 @@ def atomic(
 
 
 class AbstractUnitOfWork(ABC):
-
     @abstractmethod
     def __init__(self) -> Never:
         raise NotImplementedError
@@ -32,10 +31,10 @@ class AbstractUnitOfWork(ABC):
 
     @abstractmethod
     async def __aexit__(
-            self,
-            exc_type: Optional[type[BaseException]],
-            exc_val: Optional[BaseException],
-            exc_tb: Optional[TracebackType]
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
     ) -> Never:
         raise NotImplementedError
 
@@ -46,7 +45,6 @@ class AbstractUnitOfWork(ABC):
     @abstractmethod
     async def rollback(self) -> Never:
         raise NotImplementedError
-
 
 
 class UnitOfWork(AbstractUnitOfWork):

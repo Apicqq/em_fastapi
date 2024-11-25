@@ -30,6 +30,7 @@ class InstrumentFilters(BaseModel):
     delivery_type_id: Optional[str] = Field(None)
     delivery_basis_id: Optional[str] = Field(None)
 
+
 class InstrumentWithDateFilters(InstrumentFilters):
     start_date: Optional[date]
     end_date: Optional[date]

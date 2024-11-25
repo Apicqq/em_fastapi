@@ -11,27 +11,33 @@ from app.database.db import get_async_session
 router = APIRouter()
 
 router.include_router(
-    instrument.router, prefix="/v1", tags=["Instrument | v1"]
+    instrument.router,
+    prefix="/v1",
+    tags=["Instrument | v1"],
 )
 
+
 @router.get(
-    path='/healthz/',
-    tags=['healthz'],
+    path="/healthz/",
+    tags=["healthz"],
     status_code=HTTP_200_OK,
 )
 async def health_check(
-        session: AsyncSession = Depends(get_async_session),
+    session: AsyncSession = Depends(get_async_session),
 ):
     """Check api external connection."""
+
     async def check_service(service: str) -> None:
         try:
-            if service == 'postgres':
-                await session.execute(text('SELECT 1'))
+            if service == "postgres":
+                await session.execute(text("SELECT 1"))
         except Exception:
             raise HTTPException(status_code=HTTP_400_BAD_REQUEST)
 
-    await asyncio.gather(*[
-        check_service('postgres'),
-    ])
+    await asyncio.gather(
+        *[
+            check_service("postgres"),
+        ],
+    )
 
-    return {'status': 'OK'}
+    return {"status": "OK"}

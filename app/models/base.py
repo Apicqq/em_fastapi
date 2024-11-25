@@ -4,7 +4,6 @@ from sqlalchemy.orm import declarative_base, declared_attr
 
 
 class PreBase:
-
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
@@ -21,6 +20,6 @@ Base = declarative_base(
             "ck": "ck_%(table_name)s_`%(constraint_name)s`",
             "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
             "pk": "pk_%(table_name)s",
-        }
+        },
     ),
 )
