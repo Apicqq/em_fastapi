@@ -1,12 +1,15 @@
 from datetime import date
-from typing import Any, Sequence
+from typing import Any, Sequence, TYPE_CHECKING
 
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page
-from sqlalchemy import select, distinct, Result, between, Select
+from sqlalchemy import select, distinct, between
 
 from app.models.instrument import InstrumentDB
 from app.repositories.base import SqlAlchemyRepository
+
+if TYPE_CHECKING:
+    from sqlalchemy import Result, Select
 
 
 class InstrumentRepository(SqlAlchemyRepository):
