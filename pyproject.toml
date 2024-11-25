@@ -79,8 +79,6 @@ lint.select = [
     "B",
     #flake8-commas
     "COM",
-    #flake8-django
-    "DJ",
     #flake8-print
     "T20",
     #flake8-pie
