@@ -5,6 +5,12 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class InstrumentOut(BaseModel):
+    """
+    Base Pydantic schema for Instrument model.
+
+    Represents all existing fields of the model.
+    """
+
     id: int
     exchange_product_id: str
     exchange_product_name: str
@@ -22,15 +28,25 @@ class InstrumentOut(BaseModel):
 
 
 class InstrumentDateResponse(BaseModel):
+    """Schema for representing date of a trading day."""
+
     date: date
 
 
 class InstrumentFilters(BaseModel):
+    """Schema for representing filters applied to Instruments model."""
+
     oil_id: Optional[str] = Field(None)
     delivery_type_id: Optional[str] = Field(None)
     delivery_basis_id: Optional[str] = Field(None)
 
 
 class InstrumentWithDateFilters(InstrumentFilters):
-    start_date: Optional[date]
-    end_date: Optional[date]
+    """
+    Schema for representing filters applied to Instruments model.
+
+    Also includes start_date and end_date fields.
+    """
+
+    start_date: date
+    end_date: date

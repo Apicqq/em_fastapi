@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """Settings used in the app."""
+
     postgres_db_url: str = (
         f"postgresql+asyncpg://"
         f"{os.getenv('POSTGRES_USER')}:"

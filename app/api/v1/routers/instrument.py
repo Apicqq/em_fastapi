@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from fastapi_cache.decorator import cache
 from fastapi_pagination import Page
-from mypy.types import NoneTyp
 
 from app.schemas.product import (
     InstrumentOut,

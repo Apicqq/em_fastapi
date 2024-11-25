@@ -9,6 +9,12 @@ from app.units_of_work.base import atomic
 
 
 class InstrumentService(BaseService):
+    """
+    Instrument model-specific service.
+
+    Used for performing actions with repository.
+    """
+
     base_repository: str = "instruments"
 
     @atomic
@@ -37,6 +43,11 @@ class InstrumentService(BaseService):
 
     @classmethod
     def _validate_num_dates(cls, num_dates: Optional[int]) -> None:
+        """
+        Validate incoming num_days.
+
+        Reject it, if not of correct type, or the value is below 0.
+        """
         if not isinstance(num_dates, int) or num_dates <= 0:
             raise HTTPException(
                 status_code=HTTPStatus.BAD_REQUEST,

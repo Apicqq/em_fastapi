@@ -10,9 +10,15 @@ from app.repositories.base import SqlAlchemyRepository
 
 
 class InstrumentRepository(SqlAlchemyRepository):
+    """
+    Repository class for Instrument model.
+
+    It uses SQLAlchemy as engine, and includes all base CRUD methods,
+    as well as specific ones listed below.
+    """
 
     async def get_last_trading_days(self, num_days: int) -> Sequence[date]:
-        """Список дат последних торговых дней"""
+        """Get sequence of last trading days."""
         query: Select = (
             select(distinct(self.model.date))
             .order_by(
@@ -29,7 +35,7 @@ class InstrumentRepository(SqlAlchemyRepository):
         end_date: date,
         **kwargs: Any,
     ) -> Page[InstrumentDB]:
-        """Список торгов за заданный период"""
+        """Get trading dynamics for set period."""
         query: Select = (
             select(self.model)
             .filter(
@@ -40,7 +46,7 @@ class InstrumentRepository(SqlAlchemyRepository):
         return await paginate(self.session, query)
 
     async def get_trading_results(self, **kwargs: Any) -> Page[InstrumentDB]:
-        """Список последних торгов"""
+        """Get sequence of trading results, matched by filters."""
         return await paginate(
             self.session,
             select(self.model).filter_by(**kwargs),
