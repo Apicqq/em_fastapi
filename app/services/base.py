@@ -31,7 +31,8 @@ class BaseService:
         After that, return it's id.
         """
         return await getattr(
-            self.uow, self.base_repository,
+            self.uow,
+            self.base_repository,
         ).add_one_and_get_id(**kwargs)
 
     @atomic
@@ -42,7 +43,8 @@ class BaseService:
         After that, return the object.
         """
         return await getattr(
-            self.uow, self.base_repository,
+            self.uow,
+            self.base_repository,
         ).add_one_and_get_obj(**kwargs)
 
     @atomic
@@ -53,7 +55,8 @@ class BaseService:
         After that, return the object (if found) or None.
         """
         return await getattr(
-            self.uow, self.base_repository,
+            self.uow,
+            self.base_repository,
         ).get_by_query_one_or_none(**kwargs)
 
     @atomic
@@ -75,7 +78,8 @@ class BaseService:
         After that, return it (if found).
         """
         return await getattr(self.uow, self.base_repository).update_one_by_id(
-            obj_id, **kwargs,
+            obj_id,
+            **kwargs,
         )
 
     @atomic
