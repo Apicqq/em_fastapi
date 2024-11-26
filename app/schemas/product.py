@@ -36,9 +36,9 @@ class InstrumentDateResponse(BaseModel):
 class InstrumentFilters(BaseModel):
     """Schema for representing filters applied to Instruments model."""
 
-    oil_id: Optional[str] = Field(None)
-    delivery_type_id: Optional[str] = Field(None)
-    delivery_basis_id: Optional[str] = Field(None)
+    oil_id: Optional[str] = Field(None, max_length=4)
+    delivery_type_id: Optional[str] = Field(None, max_length=1)
+    delivery_basis_id: Optional[str] = Field(None, max_length=3)
 
 
 class InstrumentWithDateFilters(InstrumentFilters):
