@@ -1,7 +1,8 @@
 from datetime import datetime, date
-from typing import Annotated, Optional
+from typing import Annotated, Self, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, PositiveFloat
+from pydantic import BaseModel, ConfigDict, Field, PositiveFloat, \
+    model_validator
 
 
 class InstrumentOut(BaseModel):
@@ -36,9 +37,9 @@ class InstrumentDateResponse(BaseModel):
 class InstrumentFilters(BaseModel):
     """Schema for representing filters applied to Instruments model."""
 
-    oil_id: Optional[Annotated[str, Field(None, max_length=4)]]
-    delivery_type_id: Optional[Annotated[str, Field(None, max_length=1)]]
-    delivery_basis_id: Optional[Annotated[str,  Field(None, max_length=3)]]
+    oil_id: Annotated[str, Field(None, max_length=4)]
+    delivery_type_id: Annotated[str, Field(None, max_length=1)]
+    delivery_basis_id: Annotated[str, Field(None, max_length=3)]
 
 
 class InstrumentWithDateFilters(InstrumentFilters):
@@ -47,6 +48,15 @@ class InstrumentWithDateFilters(InstrumentFilters):
 
     Also includes start_date and end_date fields.
     """
+
+    @model_validator(mode="after")
+    def validate_timedelta(self) -> Self:
+        if self.start_date and self.end_date:
+            if self.start_date > self.end_date:
+                raise ValueError(
+                    "start_date must be less or equal than end_date"
+                )
+        return self
 
     start_date: date
     end_date: date
