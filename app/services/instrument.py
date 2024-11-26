@@ -51,5 +51,5 @@ class InstrumentService(BaseService):
         if not isinstance(num_dates, int) or num_dates <= 0:
             raise HTTPException(
                 status_code=HTTPStatus.BAD_REQUEST,
-                detail="Number of dates must be a positive integer",
+                detail="Number of days must be a positive integer",
             )
