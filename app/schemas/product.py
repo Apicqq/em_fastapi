@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from typing import Optional
+from typing import Annotated, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, PositiveFloat
 
@@ -12,12 +12,12 @@ class InstrumentOut(BaseModel):
     """
 
     id: int
-    exchange_product_id: str = Field(..., max_length=11)
+    exchange_product_id: Annotated[str, Field(..., max_length=11)]
     exchange_product_name: str
-    oil_id: str = Field(..., max_length=4)
-    delivery_basis_id: str = Field(..., max_length=3)
+    oil_id: Annotated[str, Field(..., max_length=4)]
+    delivery_basis_id: Annotated[str, Field(..., max_length=3)]
     delivery_basis_name: str
-    delivery_type_id: str = Field(..., max_length=1)
+    delivery_type_id: Annotated[str, Field(..., max_length=1)]
     volume: PositiveFloat
     total: PositiveFloat
     count: PositiveFloat
@@ -36,9 +36,9 @@ class InstrumentDateResponse(BaseModel):
 class InstrumentFilters(BaseModel):
     """Schema for representing filters applied to Instruments model."""
 
-    oil_id: Optional[str] = Field(None, max_length=4)
-    delivery_type_id: Optional[str] = Field(None, max_length=1)
-    delivery_basis_id: Optional[str] = Field(None, max_length=3)
+    oil_id: Optional[Annotated[str, Field(None, max_length=4)]]
+    delivery_type_id: Optional[Annotated[str, Field(None, max_length=1)]]
+    delivery_basis_id: Optional[Annotated[str,  Field(None, max_length=3)]]
 
 
 class InstrumentWithDateFilters(InstrumentFilters):
