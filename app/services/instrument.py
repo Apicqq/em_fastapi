@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from fastapi.exceptions import HTTPException
 
-from app.schemas.product import InstrumentDateResponse
+from app.schemas.instrument import InstrumentDateResponse
 from app.services.base import BaseService
 from app.units_of_work.base import atomic
 

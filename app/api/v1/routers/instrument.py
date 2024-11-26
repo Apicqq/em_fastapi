@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi_cache.decorator import cache
 from fastapi_pagination import Page
 
-from app.schemas.product import (
+from app.schemas.instrument import (
     InstrumentOut,
     InstrumentDateResponse,
     InstrumentFilters,
