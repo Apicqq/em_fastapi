@@ -56,11 +56,10 @@ class InstrumentWithDateFilters(InstrumentFilters):
 
     @model_validator(mode="after")
     def validate_timedelta(self) -> Self:
-        if self.start_date and self.end_date:
-            if self.start_date > self.end_date:
-                raise ValueError(
-                    "start_date must be less or equal than end_date"
-                )
+        if (
+            self.start_date and self.end_date
+        ) and self.start_date > self.end_date:
+            raise ValueError("start_date must be less or equal than end_date")
         return self
 
     start_date: date
