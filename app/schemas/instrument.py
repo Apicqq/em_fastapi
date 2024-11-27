@@ -1,8 +1,13 @@
 from datetime import datetime, date
 from typing import Annotated, Self, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, PositiveFloat, \
-    model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PositiveFloat,
+    model_validator,
+)
 
 
 class InstrumentOut(BaseModel):
