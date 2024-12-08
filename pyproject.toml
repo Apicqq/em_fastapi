@@ -19,6 +19,12 @@ fastapi-cache2 = {extras = ["redis"], version = "^0.2.2"}
 types-redis = "^4.6.0.20241004"
 
 
+[tool.poetry.group.testing.dependencies]
+httpx = "^0.28.1"
+pytest = "^8.3.4"
+pytest-asyncio = "^0.24.0"
+asgi-lifespan = "^2.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -109,3 +115,12 @@ inline-quotes = "double"
 
 [toool.mypy]
 plugins = ['pydantic.mypy']
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = "app/"
+norecursedirs = ".venv/*"
+testpaths = ["tests"]
+python_files = "test_*.py"
+asyncio_default_fixture_loop_scope = "function"
