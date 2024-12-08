@@ -19,7 +19,7 @@ router = APIRouter(prefix="/instrument")
     "/get_last_trading_days",
     response_model=list[InstrumentDateResponse],
 )
-# @cache()
+@cache()
 async def get_last_trading_days(
     num_dates: int,
     service: InstrumentService = Depends(InstrumentService),
@@ -31,7 +31,7 @@ async def get_last_trading_days(
     "/get_dynamics",
     response_model=Page[InstrumentOut],
 )
-# @cache()
+@cache()
 async def get_dynamics(
     filters_query: Annotated[InstrumentWithDateFilters, Query()],
     service: InstrumentService = Depends(InstrumentService),
@@ -47,7 +47,7 @@ async def get_dynamics(
     "/get_trading_results",
     response_model=Page[InstrumentOut],
 )
-# @cache()
+@cache()
 async def get_trading_results(
     filters_query: Annotated[InstrumentFilters, Query()],
     service: InstrumentService = Depends(InstrumentService),
