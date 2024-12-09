@@ -124,3 +124,4 @@ norecursedirs = ".venv/*"
 testpaths = ["tests"]
 python_files = "test_*.py"
 asyncio_default_fixture_loop_scope = "function"
+filterwarnings = "ignore::DeprecationWarning"

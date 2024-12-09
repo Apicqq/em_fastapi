@@ -14,9 +14,6 @@ from app.core.config import settings
 from app.database.db import get_async_session
 from app.models.base import Base
 from app.main import app
-from app.models.instrument import InstrumentDB
-
-from tests.fixtures.instruments import INSTRUMENTS_TEST_DATA
 
 engine = create_async_engine(settings.postgres_db_url)
 TestAsyncSession = async_sessionmaker(
@@ -36,7 +33,7 @@ def event_loop(request: pytest.FixtureRequest) -> asyncio.AbstractEventLoop:
 async def async_client():
     transport = ASGITransport(app=app)
     async with AsyncClient(
-        transport=transport, base_url="http://localhost:8000"
+            transport=transport, base_url="http://localhost:8000"
     ) as client:
         async with LifespanManager(app):  # For pagination handling in tests
             yield client
@@ -58,11 +55,6 @@ async def init_test_db(get_test_data):
         await conn.run_sync(Base.metadata.drop_all)
 
 
-@pytest.fixture(scope="session")
-def get_test_data():
-    return [InstrumentDB(**instrument) for instrument in INSTRUMENTS_TEST_DATA]
-
-
 @pytest.fixture(scope="session", autouse=True)
 async def override_get_db(init_test_db):
     async def _get_async_session():
@@ -70,3 +62,8 @@ async def override_get_db(init_test_db):
             yield session
 
     app.dependency_overrides[get_async_session] = _get_async_session
+
+
+pytest_plugins = [
+    "tests.fixtures.instruments",
+]

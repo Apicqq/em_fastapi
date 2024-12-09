@@ -1,5 +1,9 @@
 from datetime import datetime
 
+import pytest
+
+from app.models.instrument import InstrumentDB
+
 
 INSTRUMENTS_TEST_DATA = (
     {
@@ -143,3 +147,7 @@ INSTRUMENTS_TEST_DATA = (
         "updated_on": datetime(2024, 2, 11),
     },
 )
+
+@pytest.fixture(scope="session")
+def get_test_data():
+    return [InstrumentDB(**instrument) for instrument in INSTRUMENTS_TEST_DATA]
